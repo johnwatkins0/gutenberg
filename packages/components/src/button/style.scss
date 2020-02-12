@@ -134,7 +134,7 @@
 	 */
 
 	&.is-secondary {
-		box-shadow: 0 0 0 $border-width $light-gray-secondary;
+		box-shadow: 0 0 0 $border-width $theme-color;
 		outline: 1px solid transparent; // Shown in high contrast mode.
 		white-space: nowrap;
 		color: $theme-color;
