@@ -1,10 +1,4 @@
 /**
- * External dependencies
- */
-
-import classnames from 'classnames';
-
-/**
  * WordPress dependencies
  */
 import { useSelect } from '@wordpress/data';
@@ -84,13 +78,8 @@ export default function BlockToolbar( { hideDragHandle } ) {
 		transform: shouldShowMovers ? 'translateX(0px)' : 'translateX(100%)',
 	};
 
-	const classes = classnames(
-		'block-editor-block-toolbar',
-		shouldShowMovers && 'is-withMovers'
-	);
-
 	return (
-		<div className={ classes } ref={ containerNodeRef }>
+		<div className="block-editor-block-toolbar" ref={ containerNodeRef }>
 			<div
 				className="block-editor-block-toolbar__mover-switcher-container"
 				ref={ nodeRef }
