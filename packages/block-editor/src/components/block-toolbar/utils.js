@@ -244,6 +244,10 @@ function useRequestAnimationFrameLoop( callback ) {
 }
 
 function getCoords( node ) {
+	if ( ! node ) {
+		return new window.DOMRect( 0, 0, 0, 0 );
+	}
+
 	const { x, left, width } = node.getBoundingClientRect();
 
 	return {
