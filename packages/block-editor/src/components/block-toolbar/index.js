@@ -1,7 +1,14 @@
 /**
+ * External dependencies
+ */
+
+import classnames from 'classnames';
+
+/**
  * WordPress dependencies
  */
 import { useSelect } from '@wordpress/data';
+import { useRef } from '@wordpress/element';
 
 /**
  * Internal dependencies
@@ -11,6 +18,10 @@ import BlockSwitcher from '../block-switcher';
 import BlockControls from '../block-controls';
 import BlockFormatControls from '../block-format-controls';
 import BlockSettingsMenu from '../block-settings-menu';
+import {
+	useShowMoversGestures,
+	useExperimentalToolbarPositioning,
+} from './utils';
 
 export default function BlockToolbar( { hideDragHandle } ) {
 	const {
@@ -51,25 +62,58 @@ export default function BlockToolbar( { hideDragHandle } ) {
 		};
 	}, [] );
 
-	if ( blockClientIds.length === 0 ) {
-		return null;
-	}
+	const containerNodeRef = useRef();
+	const nodeRef = useRef();
+
+	const {
+		showMovers,
+		gestures: showMoversGestures,
+	} = useShowMoversGestures( { ref: nodeRef } );
+
+	useExperimentalToolbarPositioning( { ref: containerNodeRef } );
 
 	const shouldShowVisualToolbar = isValid && mode === 'visual';
 	const isMultiToolbar = blockClientIds.length > 1;
 
+	const shouldShowMovers = showMovers && hasMovers;
+
+	const animatedMoverStyles = {
+		opacity: shouldShowMovers ? 1 : 0,
+		transform: shouldShowMovers ? 'translateX(0px)' : 'translateX(100%)',
+	};
+
+	const classes = classnames(
+		'block-editor-block-toolbar',
+		shouldShowMovers && 'is-withMovers'
+	);
+
 	return (
-		<div className="block-editor-block-toolbar">
-			{ hasMovers && (
-				<BlockMover
-					clientIds={ blockClientIds }
-					__experimentalOrientation={ moverDirection }
-					hideDragHandle={ hideDragHandle }
-				/>
-			) }
-			{ ( shouldShowVisualToolbar || isMultiToolbar ) && (
-				<BlockSwitcher clientIds={ blockClientIds } />
-			) }
+		<div className={ classes } ref={ containerNodeRef }>
+			<div ref={ nodeRef }>
+				<div
+					className="block-editor-block-toolbar__mover-trigger-container"
+					{ ...showMoversGestures }
+				>
+					<div
+						className="block-editor-block-toolbar__mover-trigger-wrapper"
+						style={ animatedMoverStyles }
+					>
+						<BlockMover
+							clientIds={ blockClientIds }
+							__experimentalOrientation={ moverDirection }
+							hideDragHandle={ hideDragHandle }
+						/>
+					</div>
+				</div>
+				{ ( shouldShowVisualToolbar || isMultiToolbar ) && (
+					<div
+						{ ...showMoversGestures }
+						className="block-editor-block-toolbar__block-switcher-wrapper"
+					>
+						<BlockSwitcher clientIds={ blockClientIds } />
+					</div>
+				) }
+			</div>
 			{ shouldShowVisualToolbar && ! isMultiToolbar && (
 				<>
 					<BlockControls.Slot
