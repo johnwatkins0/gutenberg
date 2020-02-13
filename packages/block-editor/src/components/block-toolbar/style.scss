@@ -202,7 +202,7 @@
 }
 
 .block-editor-block-toolbar__mover-trigger-container {
-	@media (min-width: 782px) {
+	@include break-medium() {
 		left: -1px;
 		position: absolute;
 		top: -1px;
@@ -212,7 +212,7 @@
 }
 
 .block-editor-block-toolbar__mover-trigger-wrapper {
-	@media (min-width: 782px) {
+	@include break-medium() {
 		background-color: $white;
 		border: 1px solid $black;
 		border-bottom-left-radius: 2px;
