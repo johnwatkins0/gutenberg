@@ -1,4 +1,8 @@
 /**
+ * External dependencies
+ */
+import { noop } from 'lodash';
+/**
  * WordPress dependencies
  */
 import { useState } from '@wordpress/element';
@@ -54,19 +58,22 @@ const LinkControlSearchInput = ( {
 	}
 
 	return (
-		<form onSubmit={ selectSuggestionOrCurrentInputValue }>
+		// eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+		<form
+			onSubmit={ selectSuggestionOrCurrentInputValue }
+			onKeyDown={ ( event ) => {
+				if ( event.keyCode === ENTER ) {
+					return;
+				}
+				handleLinkControlOnKeyDown( event );
+			} }
+			onKeyPress={ handleLinkControlOnKeyPress }
+		>
 			<URLInput
 				className="block-editor-link-control__search-input"
 				value={ value }
 				onChange={ selectItemHandler }
-				onFocus={ selectItemHandler }
-				onKeyDown={ ( event ) => {
-					if ( event.keyCode === ENTER ) {
-						return;
-					}
-					handleLinkControlOnKeyDown( event );
-				} }
-				onKeyPress={ handleLinkControlOnKeyPress }
+				onFocus={ noop }
 				placeholder={ __( 'Search or type url' ) }
 				__experimentalRenderSuggestions={ renderSuggestions }
 				__experimentalFetchLinkSuggestions={ fetchSuggestions }

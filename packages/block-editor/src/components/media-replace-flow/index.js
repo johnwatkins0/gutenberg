@@ -13,7 +13,7 @@ import {
 	Dropdown,
 	withNotices,
 } from '@wordpress/components';
-import { LEFT, RIGHT, UP, DOWN, BACKSPACE, ENTER } from '@wordpress/keycodes';
+import { DOWN } from '@wordpress/keycodes';
 import { useSelect } from '@wordpress/data';
 import { compose } from '@wordpress/compose';
 import { upload } from '@wordpress/icons';
@@ -23,8 +23,7 @@ import { upload } from '@wordpress/icons';
  */
 import MediaUpload from '../media-upload';
 import MediaUploadCheck from '../media-upload/check';
-import LinkEditor from '../url-popover/link-editor';
-import LinkViewer from '../url-popover/link-viewer';
+import LinkControl from '../link-control';
 
 const MediaReplaceFlow = ( {
 	mediaURL,
@@ -36,27 +35,11 @@ const MediaReplaceFlow = ( {
 	onError,
 	name = __( 'Replace' ),
 } ) => {
-	const [ showEditURLInput, setShowEditURLInput ] = useState( false );
 	const [ mediaURLValue, setMediaURLValue ] = useState( mediaURL );
 	const mediaUpload = useSelect( ( select ) => {
 		return select( 'core/block-editor' ).getSettings().mediaUpload;
 	}, [] );
 	const editMediaButtonRef = createRef();
-
-	const stopPropagation = ( event ) => {
-		event.stopPropagation();
-	};
-
-	const stopPropagationRelevantKeys = ( event ) => {
-		if (
-			[ LEFT, DOWN, RIGHT, UP, BACKSPACE, ENTER ].indexOf(
-				event.keyCode
-			) > -1
-		) {
-			// Stop the key event from propagating up to ObserveTyping.startTypingInTextField.
-			event.stopPropagation();
-		}
-	};
 
 	const selectMedia = ( media ) => {
 		onSelect( media );
@@ -66,7 +49,6 @@ const MediaReplaceFlow = ( {
 
 	const selectURL = ( newURL ) => {
 		onSelectURL( newURL );
-		setShowEditURLInput( false );
 	};
 
 	const uploadFiles = ( event, closeDropdown ) => {
@@ -90,43 +72,6 @@ const MediaReplaceFlow = ( {
 			event.target.click();
 		}
 	};
-
-	let urlInputUIContent;
-	if ( showEditURLInput ) {
-		urlInputUIContent = (
-			<LinkEditor
-				className="block-editor-media-replace-flow__link-editor"
-				onKeyDown={ stopPropagationRelevantKeys }
-				onKeyPress={ stopPropagation }
-				value={ mediaURLValue }
-				isFullWidthInput={ true }
-				hasInputBorder={ true }
-				onChangeInputValue={ ( url ) => setMediaURLValue( url ) }
-				onSubmit={ ( event ) => {
-					event.preventDefault();
-					selectURL( mediaURLValue );
-					editMediaButtonRef.current.focus();
-				} }
-			/>
-		);
-	} else {
-		urlInputUIContent = (
-			<>
-				<span className="block-editor-media-replace-flow__image-url-label">
-					{ __( ' Current media URL:' ) }
-				</span>
-				<LinkViewer
-					isFullWidth={ true }
-					iconButton={ false }
-					className="block-editor-media-replace-flow__link-viewer"
-					url={ mediaURLValue }
-					onEditLinkClick={ () =>
-						setShowEditURLInput( ! showEditURLInput )
-					}
-				/>
-			</>
-		);
-	}
 
 	return (
 		<Dropdown
@@ -180,7 +125,19 @@ const MediaReplaceFlow = ( {
 					</NavigableMenu>
 					{ onSelectURL && (
 						<div className="block-editor-media-flow__url-input">
-							{ urlInputUIContent }
+							<span className="block-editor-media-replace-flow__image-url-label">
+								{ __( ' Current media URL:' ) }
+							</span>
+							<LinkControl
+								value={ { url: mediaURLValue } }
+								settings={ false }
+								showSuggestions={ false }
+								onChange={ ( { url } ) => {
+									setMediaURLValue( url );
+									selectURL( url );
+									editMediaButtonRef.current.focus();
+								} }
+							/>
 						</div>
 					) }
 				</>

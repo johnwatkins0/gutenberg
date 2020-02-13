@@ -95,6 +95,7 @@ function LinkControl( {
 	value,
 	settings,
 	onChange = noop,
+	showSuggestions = true,
 	showInitialSuggestions,
 	forceIsEditingLink,
 } ) {
@@ -323,7 +324,9 @@ function LinkControl( {
 						onChange( { ...value, ...suggestion } );
 						stopEditing();
 					} }
-					renderSuggestions={ renderSearchResults }
+					renderSuggestions={
+						showSuggestions ? renderSearchResults : noop
+					}
 					fetchSuggestions={ getSearchHandler }
 					showInitialSuggestions={ showInitialSuggestions }
 				/>
