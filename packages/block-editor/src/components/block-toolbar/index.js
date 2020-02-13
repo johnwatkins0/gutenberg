@@ -21,6 +21,7 @@ import BlockSettingsMenu from '../block-settings-menu';
 import {
 	useShowMoversGestures,
 	useExperimentalToolbarPositioning,
+	getIsSmallerViewport,
 } from './utils';
 
 export default function BlockToolbar( { hideDragHandle } ) {
@@ -75,7 +76,8 @@ export default function BlockToolbar( { hideDragHandle } ) {
 	const shouldShowVisualToolbar = isValid && mode === 'visual';
 	const isMultiToolbar = blockClientIds.length > 1;
 
-	const shouldShowMovers = showMovers && hasMovers;
+	const shouldShowMovers =
+		getIsSmallerViewport() || ( showMovers && hasMovers );
 
 	const animatedMoverStyles = {
 		opacity: shouldShowMovers ? 1 : 0,
@@ -89,7 +91,10 @@ export default function BlockToolbar( { hideDragHandle } ) {
 
 	return (
 		<div className={ classes } ref={ containerNodeRef }>
-			<div ref={ nodeRef }>
+			<div
+				className="block-editor-block-toolbar__mover-switcher-container"
+				ref={ nodeRef }
+			>
 				<div
 					className="block-editor-block-toolbar__mover-trigger-container"
 					{ ...showMoversGestures }

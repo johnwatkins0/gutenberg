@@ -140,6 +140,7 @@ export function useShowMoversGestures( { ref, debounceTimeout = 500 } ) {
 }
 
 const EDITOR_SELECTOR = '.editor-styles-wrapper';
+const VIEWPORT_BREAKPOINT = 782;
 
 /**
  * This is experimental.
@@ -189,6 +190,10 @@ export function useExperimentalToolbarPositioning( { ref } ) {
 		} else {
 			// TODO: Improve reset rendering
 			translateXRef.current = 0;
+		}
+
+		if ( getIsSmallerViewport() ) {
+			nextTranslateX = 0;
 		}
 
 		if ( nextTranslateX ) {
@@ -247,4 +252,8 @@ function getCoords( node ) {
 		width,
 		right: x + width,
 	};
+}
+
+export function getIsSmallerViewport() {
+	return window.innerWidth < VIEWPORT_BREAKPOINT;
 }
