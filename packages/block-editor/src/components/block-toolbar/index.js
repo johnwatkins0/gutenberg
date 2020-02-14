@@ -12,11 +12,7 @@ import BlockSwitcher from '../block-switcher';
 import BlockControls from '../block-controls';
 import BlockFormatControls from '../block-format-controls';
 import BlockSettingsMenu from '../block-settings-menu';
-import {
-	useShowMoversGestures,
-	useExperimentalToolbarPositioning,
-	getIsSmallerViewport,
-} from './utils';
+import { useShowMoversGestures, getIsSmallerViewport } from './utils';
 
 export default function BlockToolbar( { hideDragHandle } ) {
 	const {
@@ -64,8 +60,6 @@ export default function BlockToolbar( { hideDragHandle } ) {
 		showMovers,
 		gestures: showMoversGestures,
 	} = useShowMoversGestures( { ref: nodeRef } );
-
-	useExperimentalToolbarPositioning( { ref: containerNodeRef } );
 
 	const shouldShowVisualToolbar = isValid && mode === 'visual';
 	const isMultiToolbar = blockClientIds.length > 1;
