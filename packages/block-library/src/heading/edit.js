@@ -12,12 +12,10 @@ import HeadingToolbar from './heading-toolbar';
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { PanelBody } from '@wordpress/components';
 import { createBlock } from '@wordpress/blocks';
 import {
 	AlignmentToolbar,
 	BlockControls,
-	InspectorControls,
 	RichText,
 	__experimentalUseColors,
 } from '@wordpress/block-editor';
@@ -47,8 +45,8 @@ function HeadingEdit( {
 		<>
 			<BlockControls>
 				<HeadingToolbar
-					minLevel={ 2 }
-					maxLevel={ 5 }
+					minLevel={ 1 }
+					maxLevel={ 7 }
 					selectedLevel={ level }
 					onChange={ ( newLevel ) =>
 						setAttributes( { level: newLevel } )
@@ -61,20 +59,6 @@ function HeadingEdit( {
 					} }
 				/>
 			</BlockControls>
-			<InspectorControls>
-				<PanelBody title={ __( 'Heading settings' ) }>
-					<p>{ __( 'Level' ) }</p>
-					<HeadingToolbar
-						isCollapsed={ false }
-						minLevel={ 1 }
-						maxLevel={ 7 }
-						selectedLevel={ level }
-						onChange={ ( newLevel ) =>
-							setAttributes( { level: newLevel } )
-						}
-					/>
-				</PanelBody>
-			</InspectorControls>
 			{ InspectorControlsColorPanel }
 			<TextColor>
 				<RichText
