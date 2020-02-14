@@ -1,6 +1,7 @@
 /**
  * WordPress dependencies
  */
+import { useViewportMatch } from '@wordpress/compose';
 import { useState, useRef, useEffect, useCallback } from '@wordpress/element';
 
 const {
@@ -140,7 +141,6 @@ export function useShowMoversGestures( { ref, debounceTimeout = 500 } ) {
 }
 
 const EDITOR_SELECTOR = '.editor-styles-wrapper';
-const VIEWPORT_BREAKPOINT = 782;
 
 /**
  * This is experimental.
@@ -148,6 +148,7 @@ const VIEWPORT_BREAKPOINT = 782;
 export function useExperimentalToolbarPositioning( { ref } ) {
 	const containerNode = document.querySelector( EDITOR_SELECTOR );
 	const translateXRef = useRef( 0 );
+	const isViewportSmall = useViewportMatch( 'medium', '<' );
 
 	// MATH values
 	const moverWidth = 48;
@@ -192,7 +193,7 @@ export function useExperimentalToolbarPositioning( { ref } ) {
 			translateXRef.current = 0;
 		}
 
-		if ( getIsSmallerViewport() ) {
+		if ( isViewportSmall ) {
 			nextTranslateX = 0;
 		}
 
@@ -256,8 +257,4 @@ function getCoords( node ) {
 		width,
 		right: x + width,
 	};
-}
-
-export function getIsSmallerViewport() {
-	return window.innerWidth < VIEWPORT_BREAKPOINT;
 }

@@ -3,6 +3,7 @@
  */
 import { useSelect } from '@wordpress/data';
 import { useRef } from '@wordpress/element';
+import { useViewportMatch } from '@wordpress/compose';
 
 /**
  * Internal dependencies
@@ -12,7 +13,7 @@ import BlockSwitcher from '../block-switcher';
 import BlockControls from '../block-controls';
 import BlockFormatControls from '../block-format-controls';
 import BlockSettingsMenu from '../block-settings-menu';
-import { useShowMoversGestures, getIsSmallerViewport } from './utils';
+import { useShowMoversGestures } from './utils';
 
 export default function BlockToolbar( { hideDragHandle } ) {
 	const {
@@ -65,7 +66,7 @@ export default function BlockToolbar( { hideDragHandle } ) {
 	const isMultiToolbar = blockClientIds.length > 1;
 
 	const shouldShowMovers =
-		getIsSmallerViewport() || ( showMovers && hasMovers );
+		useViewportMatch( 'medium', '<' ) || ( showMovers && hasMovers );
 
 	const animatedMoverStyles = {
 		opacity: shouldShowMovers ? 1 : 0,
